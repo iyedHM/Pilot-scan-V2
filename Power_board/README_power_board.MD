@@ -16,7 +16,7 @@
 | 8              | RB2          | `LATBbits.LATB2` | `BAT3`                             | LED3/CELL3/75%.  |
 | 9             | RB3          | `LATBbits.LATB3` | `BAT4`                                   |LED4/CELL4/90%. |
 | 10             | RB4          | `LATBbits.LATB4` | `BAT_LEVEL`                                   | Send the battery level incoded in a PWM . |
-| 11             | RB5          | `LATBbits.LATB5` | `ENABLE`                                         | Enable the functioning of the DC-DC converter (`0` means the DC-DC is `ON`. |
+| 11             | RB5          | `LATBbits.LATB5` | `ENABLE`                                         | Enable the functioning of the DC-DC converter (`0` means the DC-DC is `ON`). |
 | 12             | RB7          | `PORTBbits.RB7`  | `PGC/Read_POWER_OFF`                          | Programming clock pin / Reading the power off signal.           |
 | 13             | RB6          |                  | `PGD`                                      | Programming data pin .               |
 | 14              | VDD          |                  | `POWER SUPPLY`                                | Provides 5V power supply to the PIC18F14K50.         |
