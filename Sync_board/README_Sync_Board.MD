@@ -186,7 +186,7 @@ The `main(void)` function is the entry point of the program and handles system i
 
 # Linux_command_line Configuration and Initialization
 
-## Overview of `serial_command_interface.py`
+## Overview of `Pilot_scan_V2.py`
 
 #### Code Overview
 
