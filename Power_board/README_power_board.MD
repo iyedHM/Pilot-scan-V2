@@ -1,5 +1,20 @@
 # Sync Board Configuration and Initialization
 
+## Overview of GPIOs
+
+### GPIO Pin Usage for PIC18F14K50
+
+| **Pin Number** | **Port Pin** | **Register**     | **Function**                                  | **Description**                                      |
+|----------------|--------------|------------------|-----------------------------------------------|------------------------------------------------------|
+| 5              | RC3          | `LATCbits.LATC3` | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
+| 11             | RB6          | `LATBbits.LATB6` | `POWER_COM`                                   | Configured as an output pin to control power to a component. When set high, it powers off the component. |
+| 12             | RB5          | `PORTBbits.RB5`  | `PWM`                                         | Configured as an input pin to read PWM signals for measuring duty cycle and period. |
+| 13             | RB4          | `PORTBbits.RB4`  | `PPS`                                         | Configured as an input pin to detect PWM signal period and handle interrupt-on-change events. |
+| Varies         | RCx, RBx, RA | Various          | General Initialization                        | Other pins configured for input or output depending on their use in the setup and init functions. |
+
+
+
+
 ## Overview of `system.c`
 
 #### Code Overview
