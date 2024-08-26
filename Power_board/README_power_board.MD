@@ -1,6 +1,6 @@
 # Sync Board Configuration and Initialization
 
-#Overview of `system.c`
+## Overview of `system.c`
 
 #### Code Overview
 
