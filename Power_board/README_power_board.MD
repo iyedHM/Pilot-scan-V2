@@ -1,4 +1,6 @@
-### Power Board Configuration and Initialization
+# Sync Board Configuration and Initialization
+
+#Overview of `system.c`
 
 #### Code Overview
 
@@ -14,35 +16,14 @@ The `#pragma config` directives set the configuration bits for the microcontroll
 - **PLLEN = ON**: 4x Phase Locked Loop (PLL) is enabled to increase clock speed.
 - **FCMEN = OFF**: Fail-Safe Clock Monitor disabled; it won't switch to the internal oscillator if a failure is detected.
 - **IESO = OFF**: Internal/External Switchover mode disabled; it won’t switch between internal and external oscillators.
-- **PWRTEN = OFF**: Power-up Timer disabled; it does not delay startup.
-- **BOREN = OFF**: Brown-out Reset disabled; no reset when the voltage drops.
-- **BORV = 30**: Brown-out Reset voltage set at approximately 3.0V.
-- **WDTEN = OFF**: Watchdog Timer disabled; it won’t reset the microcontroller if it fails.
-- **WDTPS = 32768**: Watchdog Timer Postscale Select bit; if enabled, this sets the timeout period.
-- **MCLRE = OFF**: Master Clear Reset pin disabled; the pin is used for other purposes.
-- **HFOFST = OFF**: HFINTOSC Fast Start-up disabled; the oscillator will stabilize before use.
-- **STVREN = ON**: Stack Overflow/Underflow Reset enabled; it will reset on stack overflow or underflow.
 - **LVP = OFF**: Low-Voltage Programming disabled; high voltage is needed to program.
-- **XINST = OFF**: Extended Instruction Set disabled; the standard instruction set is used.
-- **BBSIZ = OFF**: Boot Block Size disabled; no boot block memory protection.
-- **CP0 = OFF, CP1 = OFF, CPB = OFF**: Code protection off for all program memory.
-- **WRT0 = OFF, WRT1 = OFF, WRTB = OFF, WRTC = OFF**: Write protection off for all program memory.
-- **EBTR0 = OFF, EBTR1 = OFF, EBTRB = OFF**: Table read protection off for all program memory.
 
 ##### SYSTEM_Initialize Function
 
 The `SYSTEM_Initialize` function initializes the system based on the input `SYSTEM_STATE`:
 
-- **SYSTEM_STATE_USB_START**: Initializes USB-related functionalities by enabling LED and button.
-- **SYSTEM_STATE_USB_SUSPEND**: Reserved for future functionalities.
-- **SYSTEM_STATE_USB_RESUME**: Reserved for future functionalities.
+- **SYSTEM_STATE_USB_START**: Initializes USB-related functionalities .
 
-##### INTERRUPT Definition
-
-The macro `INTERRUPT` ensures compatibility with different versions of the XC8 compiler:
-
-- **`__XC8_VERSION < 2000`**: Uses the older `interrupt` keyword.
-- **`__XC8_VERSION >= 2000`**: Uses the newer `__interrupt(high_priority)` keyword.
 
 ##### Timer0 Setup Function
 
@@ -58,4 +39,25 @@ The `setupTimer0` function initializes Timer0 to generate interrupts at a specif
   - `TMR0ON`: Turns on Timer0 to start counting.
 - **Interrupt Control**: 
   - `TMR0IF`: Clears the Timer0 interrupt flag.
-  - `TMR0IE`: Enables
+  - `TMR0IE`: Enables Timer0 overflow interrupt.
+
+##### Custom Interrupt Handler
+
+The `CustomInterruptHandler` function handles different interrupt sources:
+
+- **RB Port Change Interrupt**: Checks if a change occurred on Port B:
+  - Detects falling edge on `RB4` and starts a high pulse on `LATC3` if detected.
+- **Timer0 Overflow Interrupt**: Checks if Timer0 overflowed:
+  - Toggles `LATC3` to create a square wave output.
+  - Clears Timer0 interrupt flag and reloads the timer if needed.
+
+##### SYS_InterruptHigh Function
+
+The `SYS_InterruptHigh` function handles high-priority interrupts:
+
+- **USBDeviceTasks**: Executes USB-related tasks if USB interrupts are enabled.
+- **CustomInterruptHandler**: Handles additional custom interrupts defined by the user.
+
+##### Summary
+
+This code provides a comprehensive setup for managing USB states, configuring Timer0, and handling various interrupts using a PIC microcontroller. It includes precise control over hardware resources, ensuring efficient and reliable operation for embedded applications.
