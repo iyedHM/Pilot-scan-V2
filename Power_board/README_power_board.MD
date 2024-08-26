@@ -21,7 +21,7 @@
 | 12             | RB5          | `PORTBbits.RB5`  | `BAT_LEVEL`                                   | Configured as an input pin to read PWM signals for measuring duty cycle and period to determine the battery level. |
 | 13             | RB4          | `PORTBbits.RB4`  | `PPS`                                         | Configured as an input pin to detect PPS signal period and handle interrupt-on-change events. |
 | 14             | RC2          | `LATCbits.LATC2` | `GPIO_A`                                      | General-purpose I/O pin for custom functionality.    |
-| 15             | RC1          | `LATCbits.LATC1` | `NOT(AUX_OUT)`                                | Logic inverse of AUX_OUT signal.                    |
+| 15             | RC1          | `LATCbits.LATC1` | `NOT(AUX_OUT)`                                | Logic inverse of AUX_OUT .                    |
 | 16             | RC0          | `LATCbits.LATC0` | `POWER_CHECK_U`                               | Checks if 24V is supplied by the power board (high if at 2.4V). |
 | 17             | VUSB         |                  | `VUSB`                                        | USB voltage regulator output.                        |
 | 18             | RA1          |                  | `PGC/D-`                                      | Programming clock pin / USB data- line.              |
