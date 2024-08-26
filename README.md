@@ -1,93 +1,84 @@
-# Pilot_scan_V2
+# Pilot Scan II 
+
+## Usage Manual
+
+### 1. Sync Board
+
+#### a. Hardware Modifications
+
+For the Sync Board, all components were initially soldered onto the circuit. However, during programming of the PIC through the PICKIT connector (J2), the following error was encountered: 
+
+*Target Device ID (0x0) is an Invalid Device ID. Please check your connections to the Target Device.*
+
+This error message provides limited information. To troubleshoot this issue, the following steps can be taken:
+
+1. **Check PIC Version Compatibility**: Ensure that the version of the PIC in MPLAB is compatible with the PIC being used.
+2. **Verify Connections**: Check that all connections are secure and that the 5V/3.3V power supplied to the PIC at VDD is stable.
+3. **Inspect Circuit Components**: If all connections appear correct, consider that a capacitor or another component in the circuit might be affecting the signal to the PGD, PGC, or MCLR. 
+
+In this instance, after verifying the power supply, the Supervisory Circuits Microprocessor Reset (CI2) and resistor R4 were removed to determine if MCLR was causing the problem. The error persisted, so capacitors C20, C21, and C22, which might have been interfering with the PGC and PGD signals, were removed. Following these modifications, the microchip was successfully programmed. The IC4 was then resoldered, although the reset button remains non-functional at this stage.
+
+#### b. Code
+
+The code consists of two components:
+
+1. **Custom Code**: Developed specifically for this project.
+2. **USB Connection Firmware**: Provided by the Microchip Libraries for Applications (MLA), available [here](https://www.microchip.com/en-us/tools-resources/develop/libraries/microchip-libraries-for-applications).
+
+To ensure compatibility, the correct firmware that matches the specific PIC must be used. **Note:** Do not use firmware from a different family of PICs; it must be specifically compatible.
+
+Once the appropriate code has been located, it should be executed and its functionality verified. If it does not work, double-check that all configuration bits are correctly set, as different PICs within the same family may have varying configurations.
+
+After establishing a connection with the PC (indicated by no error message on the PC and verifying the port with "usbipd list" in the Windows command terminal), you can code in the `main_sync_board.c` file located in the "Source" directory.
+
+**Interrupts**: When using interrupts with this USB configuration, **do not declare interrupts in the main file**. Doing so will interfere with system interrupts (which can be found in `system_sync_board.c`). Instead, integrate any custom interrupt within the system interrupt to ensure it is called correctly. An example can be found in the provided `system_sync_board.c` file. Be cautious with using Global Interrupt Enable (GEI) and other interrupt flags and timers to avoid conflicts with system interrupts.
+
+**Note:** the configuration bit LVP should be set to OFF or it would result in an non predectible stats for the RC3
+
+### 2. Power Board
+
+#### a. Hardware Modifications
+
+For the Power Board, several modifications were made. Initially, the same error encountered with the Sync Board was experienced. Following the earlier troubleshooting steps, it was discovered that the issue was with the Supervisory Circuits Microprocessor Reset (CI3). To resolve this, CI3 was removed, and a short circuit was created using resistor R12 and some soldering material. Additionally, the button (S1) was removed. After these changes, the board was successfully programmed.
+
+During the programming process, an attempt was made to perform an ADC (Analog-to-Digital Converter) reading, but it was not possible because the PIC16F54 does not have an ADC module. A microcontroller with the same size and pin layout, the PIC16F186, was then found and used. With this new microcontroller, ADC readings were successfully performed, and the program was completed .
+
+While testing the board, it was found after a number of tests that there was no signal going to the connector J8. The issue was identified as a faulty Digital Isolator (IC4). The reason for its failure remains unknown, but during the investigation, it was discovered that resistor R14 was causing a problem by dividing the voltage received from the J8 connector (expected to be 5V) to 2.5V. This resistor was removed, and a new IC4 was resoldered.
+
+Resistors R8 and R9 were not soldered because ...
+
+**Note:** The switch (S2) is crucial for the proper functioning of the circuit; without it, programming will not be possible.
+
+**Note:** This boards has two different ground GND(the ground shared with the sync layer) and GND_BATT(refers to the ground of the battery)
+
+#### b. Code
+
+In this code, TMR1 was used because it is a 16-bit timer with a prescaler of 1:8, capable of producing PWM (Pulse Width Modulation) at the required frequency.
+
+When using the ADC, remember to divide the reading by 1023, as it is a 10-bit reading. Then, multiply the result by the VDD (or Vref), which is set to 5V in this case.
+
+A test was conducted where, if the voltage of one of the battery cells drops below 3V, a corresponding LED will blink (e.g., CELL1 → LED1, CELL2 → LED2, CELL3 → LED3, CELL4 → LED4).
+
+The voltage range being worked with is from 12V to 17V. To calculate the total voltage read, 12 is subtracted, the result is multiplied by 100, and then divided by 5 (which is the difference between 17 and 12). This gives the percentage (out of 100), which is used to light up the LEDs based on specific thresholds:
+
+- **Below 25%**: The alert LED is illuminated.
+- **25% to 50%**: Only the first LED (LED1) is illuminated.
+- **50% to 75%**: Two LEDs are illuminated (LED1, LED2).
+- **75% to 90%**: Three LEDs are illuminated (LED1, LED2, LED3).
+- **90% to 100%**: All four LEDs are illuminated (LED1, LED2, LED3, LED4).
 
 
+### 3. Sync Board + Power Board
 
-## Getting started
+the two boards are connected by the connector J8 from the power board and J1 from the sync board ; it should be at a height of 18 mm(with +2mm of uncertainty)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+**Note:** The 8000 ticks chosen were not random; they should be compatible with the PIC that is reading it (in the Sync Board). It should not be too fast to avoid a high error rate, and it should not be too slow to prevent loss of precision due to multiple (thousands) overflows of the timer used to decode the PWM. The suitable frequency for the implementation should be determined based on the timer used, considering how many times the reception will overflow, allowing for proper setting of the sender frequency.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### what to read next 
+-**`README_sync_board.md`**: the `main_sync_board.c` and `system_sync_board.c` explained more in depth 
 
-## Add your files
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+-**`README_Pilot_scan_V2.md`**: the `Pilot_scan_V2.c` explained in depth
 
-```
-cd existing_repo
-git remote add origin https://gitlab.laas.fr/ihamrouni/pilot_scan_v2.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.laas.fr/ihamrouni/pilot_scan_v2/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+-**`README_power_board.md`**: the `main_power_board.c` explained more in depth
