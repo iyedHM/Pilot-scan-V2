@@ -186,3 +186,79 @@ The `main(void)` function is the entry point of the program and handles system i
 
 # Linux_command_line Configuration and Initialization
 
+## Overview of `serial_command_interface.py`
+
+#### Code Overview
+
+This Python script is designed to communicate with a microcontroller via a serial interface. It manages serial communication, sends commands to the microcontroller, logs data, and processes user inputs through a command-line interface.
+
+##### Import Statements
+
+- **`import serial`**: Provides the `pySerial` module for serial communication.
+- **`import threading`**: Facilitates multithreading to handle concurrent operations.
+
+##### Global Variables
+
+- **`PORT`**: Defines the serial port for communication (`"/dev/ttyACM0"`).
+- **`BAUDRATE`**: Sets the baud rate for serial communication (`9600`).
+- **`TIMEOUT`**: Specifies the read timeout for serial operations (`2` seconds).
+
+- **`log_event`**: A threading event that controls the logging process.
+- **`serial_lock`**: A threading lock that ensures serial port access is synchronized across threads.
+
+##### `send_command` Function
+
+This function sends a command to the microcontroller via the serial port and retrieves the response.
+
+- **Serial Port Access**: 
+  - The function uses `serial_lock` to prevent simultaneous access by multiple threads.
+  - Opens the serial port with the specified parameters (`PORT`, `BAUDRATE`, `TIMEOUT`).
+  
+- **Command Transmission**: 
+  - Sends the command to the microcontroller, encoded in ASCII.
+  - Waits for 1 second to allow the microcontroller to process the command.
+  
+- **Response Handling**: 
+  - Reads the response from the serial port, decodes it, and returns the result after stripping any extra whitespace.
+
+##### `log_battery` Function
+
+This function logs the battery status at a specified frequency.
+
+- **Command Formation**: 
+  - Forms the command string to request battery level information from the microcontroller.
+  
+- **Logging Loop**:
+  - Continuously sends the command and checks for a response while `log_event` is set.
+  - Processes the response to format and print the battery status.
+  - Adjusts the sleep duration based on the specified logging frequency to control the logging rate.
+
+##### `main` Function
+
+The main function serves as the entry point and handles user input, command processing, and thread management.
+
+- **Global Variables**: 
+  - `log_thread`: A variable to manage the battery logging thread.
+  - `logging_freq`: Stores the frequency at which battery levels should be logged (default is 1 Hz).
+
+- **User Command Input**: 
+  - Uses `getpass` to read commands from the user.
+  
+- **Command Matching and Execution**:
+  - Uses regular expressions to match and process different commands (`EXIT`, `HELP`, `TRIGGER ON`, `TRIGGER OFF`, `POWER OFF`, `LOG BATTERY`).
+  
+  - **`EXIT`**: Terminates the program, ensuring any active logging thread is properly stopped.
+  - **`HELP`**: Displays a list of valid commands and their usage.
+  - **`TRIGGER ON [FREQ]`**: Activates the trigger at the specified frequency. If no frequency is provided, a default of 10 Hz is used.
+  - **`TRIGGER OFF`**: Deactivates the trigger.
+  - **`POWER OFF`**: Sends a command to power off the device.
+  - **`LOG BATTERY [FREQ]`**: Initiates logging of the battery level at the specified frequency. If no frequency is specified, it defaults to 10 Hz.
+
+- **Thread Management**: 
+  - For commands like `TRIGGER ON`, `TRIGGER OFF`, and `POWER OFF`, the function handles starting and stopping the logging thread by setting or clearing `log_event`.
+
+##### Execution
+
+- **Program Start**: The script begins execution in the `main` function, processing commands in a loop until the user exits.
+
+- **Thread Safety**: The use of threading locks and events ensures that serial communication and logging are thread-safe and can operate concurrently without conflicts.
