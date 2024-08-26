@@ -1,6 +1,35 @@
 
 ### Power Board
 
+### GPIO Pin Usage for PIC18F14K50
+
+
+| **Pin Number** | **Port Pin** | **Register**     | **Function**                                  | **Description**                                      |
+|----------------|--------------|------------------|-----------------------------------------------|------------------------------------------------------|
+| 1              | RA2          | `PORTAbits.RA2`  | `S3`                         | the SUM of 3 cells of the battery.       |
+| 2              | RA3          | `PORTAbits.RA3`  | `S4`                              | the SUM of 4 cells of the battery.      |
+| 3              | TOCKI        | Not Connected    | ---                                           | Not connected.                                       |
+| 4              | MCLR         |                  | `MCLR`                                        | Master Clear (reset) pin, active low.                |
+| 5             | VSS          |                  | `GND`                                         | Ground for the PIC16F1826.                          |
+| 6              | RB0          | `LATBbits.LATB0` | `BAT1`                                     | LED1/CELL1/25%.       |
+| 7              | RB1          | `LATBbits.LATB1` | `BAT2`                                | LED2/CELL2/50%.|
+| 8              | RB2          | `LATBbits.LATB2` | `BAT3`                             | LED3/CELL3/75%.  |
+| 9             | RB3          | `LATBbits.LATB3` | `BAT4`                                   |LED4/CELL4/90%. |
+| 10             | RB4          | `LATBbits.LATB4` | `BAT_LEVEL`                                   | Send the battery level incoded in a PWM . |
+| 11             | RB5          | `LATBbits.LATB5` | `ENABLE`                                         | Enable the functioning of the DC-DC converter (`0` means the DC-DC is `ON`. |
+| 12             | RB7          | `PORTBbits.RB7`  | `PGC/Read_POWER_OFF`                          | Programming clock pin / Reading the power off signal.           |
+| 13             | RB6          |                  | `PGD`                                      | Programming data pin .               |
+| 14              | VDD          |                  | `POWER SUPPLY`                                | Provides 5V power supply to the PIC18F14K50.         |
+| 15              | OSC2         |                  | `EXTERNAL OSCILLATOR`                         | Output for external crystal oscillator.              |
+| 16              | OSC1         |                  | `EXTERNAL OSCILLATOR`                         | Input for external crystal oscillator.               |
+| 17             | RA1          | `PORTAbits.RA0`  | `S0`                                |the SUM of 2 cells of the battery .                    |
+| 18             | RA0          | `PORTAbits.RA1`  | `S1`                               | the SUM of 1 cells of the battery. |
+
+
+
+
+
+
 #### Code Overview
 
 ##### Configuration Bits
