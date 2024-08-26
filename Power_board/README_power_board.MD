@@ -58,6 +58,6 @@ The `SYS_InterruptHigh` function handles high-priority interrupts:
 - **USBDeviceTasks**: Executes USB-related tasks if USB interrupts are enabled.
 - **CustomInterruptHandler**: Handles additional custom interrupts defined by the user.
 
-##### Summary
+## Overview of `main.c`
 
-This code provides a comprehensive setup for managing USB states, configuring Timer0, and handling various interrupts using a PIC microcontroller. It includes precise control over hardware resources, ensuring efficient and reliable operation for embedded applications.
+
