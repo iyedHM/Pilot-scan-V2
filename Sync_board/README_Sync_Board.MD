@@ -1,4 +1,6 @@
-# Sync Board Configuration and Initialization
+# Sync Board
+
+# Microchip PIC18F14K50 Configuration and Initialization
 
 ## Overview of GPIOs
 
@@ -181,3 +183,6 @@ The `main(void)` function is the entry point of the program and handles system i
    - Continuously processes USB tasks to handle communication and device-specific commands.
    - Calls `Send_back()` to process and respond to USB commands, ensuring timely and accurate responses to the host.
    - Uses `__delay_ms(500)` to provide periodic delay, maintaining a steady execution pace.
+
+# Linux_command_line Configuration and Initialization
+
