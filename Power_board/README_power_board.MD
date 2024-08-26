@@ -4,20 +4,31 @@
 
 ### GPIO Pin Usage for PIC18F14K50
 
+### GPIO Pin Usage for PIC18F14K50
+
 | **Pin Number** | **Port Pin** | **Register**     | **Function**                                  | **Description**                                      |
 |----------------|--------------|------------------|-----------------------------------------------|------------------------------------------------------|
-| 1              | VDD          |                  | `POWER_SUPPLY`                                     | Configured as an output pin to trigger events.       |
-| 2              | OSC1         |                  | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
-| 5              | RC3          | `LATCbits.LATC3` | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
-| 5              | RC3          | `LATCbits.LATC3` | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
-| 5              | RC3          | `LATCbits.LATC3` | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
-| 5              | RC3          | `LATCbits.LATC3` | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
-| 5              | RC3          | `LATCbits.LATC3` | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
-| 5              | RC3          | `LATCbits.LATC3` | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
-| 11             | RB6          | `LATBbits.LATB6` | `POWER_COM`                                   | Configured as an output pin to control power to a component. When set high, it powers off the component. |
-| 12             | RB5          | `PORTBbits.RB5`  | `PWM`                                         | Configured as an input pin to read PWM signals for measuring duty cycle and period. |
-| 13             | RB4          | `PORTBbits.RB4`  | `PPS`                                         | Configured as an input pin to detect PWM signal period and handle interrupt-on-change events. |
-|          | RCx, RBx, RA | Various          | General Initialization                        | Other pins configured for input or output depending on their use in the setup and init functions. |
+| 1              | VDD          |                  | `POWER SUPPLY`                                | Provides 5V power supply to the PIC18F14K50.         |
+| 2              | OSC1         |                  | `EXTERNAL OSCILLATOR`                         | Input for external crystal oscillator.               |
+| 3              | OSC2         |                  | `EXTERNAL OSCILLATOR`                         | Output for external crystal oscillator.              |
+| 4              | MCLR         |                  | `MCLR`                                        | Master Clear (reset) pin, active low.                |
+| 5              | RC5          | `LATCbits.LATC5` | `OUSTER_MULTIPURPOSE`                         | Configured as an output pin for Ouster events.       |
+| 6              | RC4          | `LATCbits.LATC4` | `OUSTER_SYNC_IN`                              | Configured as an input pin to sync with Ouster.      |
+| 7              | RC3          | `LATCbits.LATC3` | `TRIGGER`                                     | Configured as an output pin to trigger events.       |
+| 8              | RC6          | `LATCbits.LATC6` | `BASLER_LINE3`                                | Configured as an output pin to control camera events.|
+| 9              | RC7          | `LATCbits.LATC7` | `ELLIPSE_SYNC_IN`                             | Configured as an input pin to sync with GPS events.  |
+| 10             | RB7          | Not Connected    | ---                                           | Not connected.                                       |
+| 11             | RB6          | `LATBbits.LATB6` | `POWER_COM`                                   | Configured as an output pin to control power to a component. When set high, it powers off the power board. |
+| 12             | RB5          | `PORTBbits.RB5`  | `BAT_LEVEL`                                   | Configured as an input pin to read PWM signals for measuring duty cycle and period to determine the battery level. |
+| 13             | RB4          | `PORTBbits.RB4`  | `PPS`                                         | Configured as an input pin to detect PPS signal period and handle interrupt-on-change events. |
+| 14             | RC2          | `LATCbits.LATC2` | `GPIO_A`                                      | General-purpose I/O pin for custom functionality.    |
+| 15             | RC1          | `LATCbits.LATC1` | `NOT(AUX_OUT)`                                | Logic inverse of AUX_OUT signal.                    |
+| 16             | RC0          | `LATCbits.LATC0` | `POWER_CHECK_U`                               | Checks if 24V is supplied by the power board (high if at 2.4V). |
+| 17             | VUSB         |                  | `VUSB`                                        | USB voltage regulator output.                        |
+| 18             | RA1          |                  | `PGC/D-`                                      | Programming clock pin / USB data- line.              |
+| 19             | RA0          |                  | `PGD/D+`                                      | Programming data pin / USB data+ line.               |
+| 20             | VSS          |                  | `GND`                                         | Ground for the PIC18F14K50.                          |
+
 
 
 
