@@ -262,3 +262,29 @@ The main function serves as the entry point and handles user input, command proc
 - **Program Start**: The script begins execution in the `main` function, processing commands in a loop until the user exits.
 
 - **Thread Safety**: The use of threading locks and events ensures that serial communication and logging are thread-safe and can operate concurrently without conflicts.
+
+### `ROS_pilot_scan_II.py` Functionality Explanation 
+
+The script is a ROS noetic (Robot Operating System) node that interacts with a microcontroller via a serial interface to execute various commands and publish the results on specific ROS topics. Below is a breakdown of the ROS-related components:
+
+#### 1. **Node Initialization**
+   - `rospy.init_node('serial_commander')`: This line initializes the ROS node with the name `serial_commander`. It allows the script to communicate with the ROS system.
+   - `rospy.spin()`: This keeps the node running, allowing it to continuously process callbacks (e.g., when a message is received on a subscribed topic).
+
+#### 2. **ROS Publishers**
+   - `pub_OK = rospy.Publisher("/listener_OK", String, queue_size=10)`: This publisher sends status messages (e.g., "OK" messages) to the `/listener_OK` topic. The messages are of type `String`.
+   - `pub_battery = rospy.Publisher("/Battery", BatteryState, queue_size=10)`: This publisher sends battery status updates to the `/Battery` topic. The messages are of type `BatteryState`.
+
+#### 3. **ROS Subscriber**
+   - `rospy.Subscriber("/command", String, handle_command)`: This subscriber listens to the `/command` topic for incoming commands. When a message is received, it triggers the `handle_command` function, which processes the command.
+
+#### 4. **Logging and Command Handling**
+   - The script uses the `rospy.loginfo()`, `rospy.logwarn()`, and `rospy.logerr()` functions to log information, warnings, and errors, respectively. These logs are useful for debugging and monitoring the node's activity.
+   - The `handle_command()` function processes various commands (e.g., `EXIT`, `HELP`, `TRIGGER ON`, `POWER OFF`). Depending on the command, it either modifies the behavior of the node (e.g., starting or stopping logging) or sends a corresponding command to the microcontroller via the serial interface.
+
+### Execution Flow
+   - The `main()` function is the entry point for the script. It initializes the node, sets up publishers and subscribers, starts the battery logging process via the `init()` function, and then enters a loop to keep the node alive with `rospy.spin()`.
+### Remarques 
+    - This program has advanced functionalities that may be used , the reason behind making the battery excute in it's own thread is that so we can read simultaneously the commands that are being sent and with this , the program is able to do a lot of functionalities like changing the trigger state and frequency without stopping the battery 
+    - if you invesion to add another function please take the same form that i used and change it as you please 
+
