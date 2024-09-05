@@ -40,6 +40,8 @@
 
 This code is configured for a PIC microcontroller to set up various operational parameters, handle USB states, configure Timer0, and manage interrupts.
 
+Note: in the code all the delays are at *4 their real value because of the PLLEN
+
 ##### Configuration Bits
 
 The `#pragma config` directives set the configuration bits for the microcontroller. Here’s a breakdown of each configuration:
@@ -81,6 +83,8 @@ The `CustomInterruptHandler` function handles different interrupt sources:
 - **Timer0 Overflow Interrupt**: Checks if Timer0 overflowed:
   - Toggles `LATC3` to create a square wave output.
   - Clears Timer0 interrupt flag and reloads the timer if needed.
+
+**Note**:if the PPS works with the rising edge the only change needed is to change 
 
 ##### SYS_InterruptHigh Function
 
