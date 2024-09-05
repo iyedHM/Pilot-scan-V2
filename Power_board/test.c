@@ -32,7 +32,7 @@
 #include <xc.h>
 
 /*
- * File:   test.c
+ * File:   main_Power_board.c
  * Author: MSI
  *
  * Created on 6 ao�t 2024, 14:42
